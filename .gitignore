@@ -8,11 +8,16 @@
 # java
 *.class
 
-# others
+# C++
+[A-Z]
 *.in
 *.out
+
+# others
 *.txt
-[A-Z]
 
 # add directory
 ![A-Z]/
+
+# add contest status
+!20*.txt

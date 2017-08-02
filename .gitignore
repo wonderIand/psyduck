@@ -1,0 +1,18 @@
+# swap
+*.swp
+*~
+
+# python
+*.py[cod]
+
+# java
+*.class
+
+# others
+*.in
+*.out
+*.txt
+[A-Z]
+
+# add directory
+![A-Z]/

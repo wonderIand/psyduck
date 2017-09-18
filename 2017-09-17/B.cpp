@@ -1,39 +1,67 @@
-#include<bits/stdc++.h>
+// #include {{{
+#include <iostream>
+#include <cassert>
+#include <cstring>
+#include <cstdlib>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <ctime>
+#include <queue>
+#include <set>
+#include <map>
+#include <stack>
+#include <string>
+#include <bitset>
+#include <vector>
+#include <complex>
+#include <algorithm>
 using namespace std;
+// }}}
+// #define {{{
 typedef long long ll;
-typedef vector<int> vi;
-typedef pair<int, int> pii;
 typedef double db;
-#define fi first
-#define se second
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+#define de(x) cout << #x << "=" << x << endl
+#define rep(i,a,b) for(int i=a;i<(b);++i)
+#define per(i,a,b) for(int i=(b)-1;i>=(a);--i)
+#define all(x) (x).begin(),(x).end()
+#define sz(x) (int)(x).size()
 #define mp make_pair
 #define pb push_back
-#define sz(x) ((int)(x).size())
-#define all(x) (x).begin(),(x).end()
-#define rep(i,l,r) for(int i=(l);i<(r);++i)
-#define per(i,l,r) for(int i=(r)-1;i>=(l);--i)
-#define dd(x) cout << #x << " = " << x << ", "
-#define de(x) cout << #x << " = " << x << endl
-//-------
+#define fi first
+#define se second
+// }}}
 
-int dp[201][801];
+const int N = 101 , M = 10 , K = 8;
+db f[M*N][K*N] , g[M*N][K*N];
+int lft[M*N] , rgt[M*N];
 
-
-int main() {
-	for(int h=4;h<=100;++h){
-		for(int len=0;len<8*h;++len){
-			for(int s=0;s<2*h;++s){
-				db &sum = dp[s][len] = 0.;
-				// [s , s + len]
-				rep(j,0,len+1){
-					int boom = (s + j) % (8 * h);
-					int left = 3 , right = 3;
-					if(boom % (2 * h) == 1) left = 2;
-					else if(boom % (2 * h) == 2 * h - 1) right = 2;
-
-				}
-			}
-		}
-	}
-	return 0;
+int main(){
+    int T,n;
+    scanf("%d",&T);
+    rep(i,0,T){
+        scanf("%d",&n);
+        rep(i,0,M*n) lft[i] = 3 - (i % (2 * n) == 1) , rgt[i] = 3 - (i % (2 * n) == 2 * n - 1);
+        rep(i,0,M*n) rep(j,0,K*n) f[i][j] = g[i][j] = 0;
+        per(i,0,M*n) {
+            db s=0.;
+            for(int j=i;j<M*n&&j-i<K*n;++j) {
+                if(j-lft[j]>=i) s+=f[i][j-lft[j]-i];
+                g[j][j-i]=(j-i-1>=0?g[j][j-i-1]:0.)+(j-i-rgt[i]>=0?f[i+rgt[i]][j-i-rgt[i]]:0.);
+                f[i][j-i]=(s+g[j][j-i])/(j-i+1)+1;
+            }
+        }
+        db ans=0.;
+        rep(i,0,2*n) ans+=f[i+rgt[i]][K*n-lft[i]-rgt[i]]+1;
+        ans/=2*n;
+        printf("%.6f\n",ans);
+        rep(j,0,8*n){
+            int i=j%(2*n);
+            printf("%.6f ",f[i+rgt[i]][K*n-lft[i]-rgt[i]]+1);
+        }
+        puts("");
+    }
+    return 0;
 }
